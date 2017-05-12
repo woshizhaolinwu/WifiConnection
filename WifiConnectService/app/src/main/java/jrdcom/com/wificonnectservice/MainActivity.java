@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
@@ -34,6 +35,13 @@ public class MainActivity extends Activity {
     public static TextView mTextView, textView1;
     private String IP = "";
     String buffer = "";
+
+    public static void startThis(Context context){
+        Intent intent = new Intent();
+        intent.setClass(context, MainActivity.class);
+        context.startActivity(intent);
+    }
+
     public static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(android.os.Message msg) {
