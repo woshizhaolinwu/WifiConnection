@@ -81,6 +81,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void addItem(ChartModel chartModel){
         chartList.add(chartModel);
-        notifyDataSetChanged();
+        notifyItemInserted(chartList.size() - 1);
     }
 }

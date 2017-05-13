@@ -58,10 +58,10 @@ public class ContactActivity extends AppCompatActivity {
     private void initList(){
         //add fake data
         list = new ArrayList<>();
-        ChartModel chartModel = new ChartModel("Hello",Common.CHART_SEND);
-        list.add(chartModel);
-        ChartModel chartModel1 = new ChartModel("hello ni hao", Common.CHART_RECEIVER);
-        list.add(chartModel1);
+        //ChartModel chartModel = new ChartModel("Hello",Common.CHART_SEND);
+        //list.add(chartModel);
+        //ChartModel chartModel1 = new ChartModel("hello ni hao", Common.CHART_RECEIVER);
+        //list.add(chartModel1);
     }
     private void initRecycler(){
         initList();
@@ -97,7 +97,7 @@ public class ContactActivity extends AppCompatActivity {
             Bundle bundle = new Bundle();
             bundle.clear();
             OutputStream output;
-            String str = "hello hehe";
+            final String str = "hello hehe";
             try {
                 serverSocket = new ServerSocket(30000);
                 while (true) {
@@ -110,6 +110,15 @@ public class ContactActivity extends AppCompatActivity {
                         output.write(str.getBytes("gbk"));
                         output.flush();
                         socket.shutdownOutput();
+                        //返回数据
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ChartModel chartModel= new ChartModel(str, Common.CHART_SEND);
+                                contactAdapter.addItem(chartModel);
+                            }
+                        });
+
                         BufferedReader bff = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         String line = null;
                         buffer = "";

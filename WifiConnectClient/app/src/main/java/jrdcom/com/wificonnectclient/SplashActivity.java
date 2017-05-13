@@ -83,7 +83,7 @@ public class SplashActivity extends AppCompatActivity {
                         Toast.makeText(SplashActivity.this ,"Your network is error, pls connect same wifi with service",Toast.LENGTH_LONG).show();
                     }else{
                         /*Send the ipString to MainActivity*/
-                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                        Intent intent = new Intent(SplashActivity.this, ContactActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putString("ip", editText.getText().toString());
                         intent.putExtras(bundle);

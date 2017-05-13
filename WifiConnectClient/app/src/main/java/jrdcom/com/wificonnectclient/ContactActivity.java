@@ -1,5 +1,6 @@
 package jrdcom.com.wificonnectclient;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -73,10 +75,10 @@ public class ContactActivity extends AppCompatActivity {
     private void initList(){
         //add fake data
         list = new ArrayList<>();
-        ChartModel chartModel = new ChartModel("Hello",Common.CHART_SEND);
-        list.add(chartModel);
-        ChartModel chartModel1 = new ChartModel("hello ni hao", Common.CHART_RECEIVER);
-        list.add(chartModel1);
+        //ChartModel chartModel = new ChartModel("Hello",Common.CHART_SEND);
+        //list.add(chartModel);
+        //ChartModel chartModel1 = new ChartModel("hello ni hao", Common.CHART_RECEIVER);
+        //list.add(chartModel1);
     }
     private void initRecycler(){
         initList();
@@ -107,9 +109,14 @@ public class ContactActivity extends AppCompatActivity {
                         msg.what = 0x12;
                         Bundle bundle = new Bundle();
                         bundle.putString("send_string",send);
+                        msg.setData(bundle);
                         myThreadHandler.sendMessage(msg);
+                        /*把自己发的更新上去*/
+                        ChartModel chartModel = new ChartModel(mEditText.getText().toString(),Common.CHART_SEND);
+                        contactAdapter.addItem(chartModel);
+                        mEditText.setText("");
+                        HideKeyboard(mEditText);
                     }
-
                     break;
             }
         }
@@ -174,7 +181,6 @@ public class ContactActivity extends AppCompatActivity {
     };
 
     private void updateList(ChartModel chartModel){
-        list.add(chartModel);
         contactAdapter.addItem(chartModel);
     }
 
@@ -222,10 +228,11 @@ public class ContactActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             if (msg.what == 0x11) { //更新UI数据
                 Bundle bundle = msg.getData();
-                //txt1.append("server:"+bundle.getString("msg")+"\n");
+                String message = bundle.getString("msg");
+                ChartModel chartModel = new ChartModel(message, Common.CHART_RECEIVER);
+                updateList(chartModel);
             }
         }
-
     };
 
 
@@ -233,8 +240,12 @@ public class ContactActivity extends AppCompatActivity {
         String result= null;
         try {
             //连接服务器 并设置连接超时为1秒
-            socket = new Socket();
-            socket.connect(new InetSocketAddress(ipString, 30000), 1000); //端口号为30000
+            //if(socket == null){
+                socket = new Socket();
+            //}
+            //if(!socket.isConnected()){
+                socket.connect(new InetSocketAddress(ipString, 30000), 1000); //端口号为30000
+            //}
 
             //获取输入输出流
             OutputStream ou = socket.getOutputStream();
@@ -250,6 +261,13 @@ public class ContactActivity extends AppCompatActivity {
             //向服务器发送信息
             ou.write(txt.getBytes("gbk"));
             ou.flush();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ChartModel chartModel = new ChartModel(buffer.toString(), Common.CHART_RECEIVER);
+                    contactAdapter.addItem(chartModel);
+                }
+            });
             result = buffer.toString();
             bff.close();
             ou.close();
@@ -261,4 +279,25 @@ public class ContactActivity extends AppCompatActivity {
         }
         return result;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //try{
+            //socket.close();
+        /*}catch (Exception e){
+
+        }*/
+    }
+
+    //隐藏虚拟键盘
+    public static void HideKeyboard(View v)
+    {
+        InputMethodManager imm = ( InputMethodManager ) v.getContext( ).getSystemService( Context.INPUT_METHOD_SERVICE );
+        if ( imm.isActive( ) ) {
+            imm.hideSoftInputFromWindow( v.getApplicationWindowToken( ) , 0 );
+
+        }
+    }
+
 }
