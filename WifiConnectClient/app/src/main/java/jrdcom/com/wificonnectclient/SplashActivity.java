@@ -1,5 +1,6 @@
 package jrdcom.com.wificonnectclient;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
 public class SplashActivity extends AppCompatActivity {
     private Button btn_Gointo;
     private EditText editText;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +82,13 @@ public class SplashActivity extends AppCompatActivity {
                     }else if(NetWorkUtil.NETWORK_ERROR == NetWorkUtil.getNetworkType(SplashActivity.this)){
                         Toast.makeText(SplashActivity.this ,"Your network is error, pls connect same wifi with service",Toast.LENGTH_LONG).show();
                     }else{
-                        MainActivity.startThis(SplashActivity.this);
+                        /*Send the ipString to MainActivity*/
+                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("ip", editText.getText().toString());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        //MainActivity.startThis(SplashActivity.this);
                     }
                     break;
             }

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">WifiConnectService</string>
     <string name="no_ip">No Ip</string>
+    <string name="ip">No Ip</string>
 </resources>

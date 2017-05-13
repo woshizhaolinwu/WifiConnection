@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
     Button send;
     EditText ed1;
     String geted1;
+    String ipString = "0.0.0.0" ;
     public Handler myHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -50,6 +51,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //获取IP
+        Intent intent= getIntent();
+        Bundle bundle = intent.getExtras();
+        ipString = bundle.getString("ip");
+
         txt1 = (TextView) findViewById(R.id.txt1);
         send = (Button) findViewById(R.id.send);
         ed1 = (EditText) findViewById(R.id.ed1);
@@ -85,7 +91,8 @@ public class MainActivity extends Activity {
             try {
                 //连接服务器 并设置连接超时为1秒
                 socket = new Socket();
-                socket.connect(new InetSocketAddress("10.58.164.196", 30000), 1000); //端口号为30000
+                socket.connect(new InetSocketAddress(ipString, 30000), 1000); //端口号为30000
+
                 //获取输入输出流
                 OutputStream ou = socket.getOutputStream();
                 BufferedReader bff = new BufferedReader(new InputStreamReader(

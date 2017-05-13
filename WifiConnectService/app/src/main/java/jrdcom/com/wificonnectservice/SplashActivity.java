@@ -1,5 +1,6 @@
 package jrdcom.com.wificonnectservice;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
         if(ip != null){
             mTextView.setText(ip);
         }else{
-            mTextView.setText(getResources().getText(""R.string.no_ip));
+            mTextView.setText(getResources().getString(R.string.no_ip));
         }
 
         mButton.setOnClickListener(onClickListener);
@@ -67,7 +68,9 @@ public class SplashActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.btn_go:
                     //进入Main
-                    MainActivity.startThis(SplashActivity.this);
+                    Intent intent= new Intent(SplashActivity.this, ContactActivity.class);
+                    startActivity(intent);
+                    //MainActivity.startThis(SplashActivity.this);
                     break;
             }
         }

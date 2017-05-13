@@ -65,8 +65,12 @@ public class MainActivity extends Activity {
         }else{
             Toast.makeText(this, "No NetWork", Toast.LENGTH_SHORT).show();
         }
-        //IP = getlocalip();
         textView1.setText("IP addresss:"+IP);
+        receiveSocketMessage();
+    }
+
+
+    private void receiveSocketMessage(){
         new Thread() {
             public void run() {
                 Looper.prepare();
@@ -109,5 +113,4 @@ public class MainActivity extends Activity {
             };
         }.start();
     }
-
 }
